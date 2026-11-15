@@ -1,8 +1,9 @@
 const RAINDROPS = [];
-const UMBRELLA = 60;
-let UMBRELLA_IMG;
+const UMBRELLA_SIZE = 80;
 const HEIGHT = 400;
 const WIDTH = 300;
+const GROUND_HEIGHT = 350;
+let UMBRELLA_IMG;
 
 async function setup() {
   createCanvas(WIDTH, HEIGHT);
@@ -12,7 +13,6 @@ async function setup() {
   }
 
   UMBRELLA_IMG = await loadImage('./assets/umbrella.png');
-
   noCursor();
 }
 
@@ -20,7 +20,7 @@ function draw() {
   background(226, 226, 226);
 
   fill(76, 76, 76);
-  rect(0, 350, WIDTH, 50);
+  rect(0, GROUND_HEIGHT, WIDTH, 50);
 
   RAINDROPS.forEach((drop) => {
     fill(color(210, 145, 255));
@@ -28,7 +28,7 @@ function draw() {
     drop.update();
     drop.display();
   });
-  image(UMBRELLA_IMG, mouseX - 30, mouseY - 30, UMBRELLA, UMBRELLA);
+  image(UMBRELLA_IMG, mouseX - 40, mouseY - 40, UMBRELLA_SIZE, UMBRELLA_SIZE);
 }
 
 class RainDrop {
@@ -45,15 +45,18 @@ class RainDrop {
   update() {
     this.posY += this.size;
 
+    if (this.sie >= 4) fill(102, 51, 153);
+
     if (
       this.size >= 3 &&
-      dist(this.posX, this.posY, mouseX, mouseY) < UMBRELLA / 2 + this.size / 2
+      dist(this.posX, this.posY, mouseX, mouseY) <
+        UMBRELLA_SIZE / 2 + this.size / 2
     ) {
       this.splash();
       this.reset();
     }
 
-    if (this.posY > 350) {
+    if (this.posY > GROUND_HEIGHT) {
       this.size >= 4 && this.splash();
       this.reset();
     }
@@ -63,8 +66,8 @@ class RainDrop {
     push();
     translate(this.posX, this.posY);
 
-    let innerRadius = random(2, 3);
-    let outerRadius = random(4, 6);
+    let innerRadius = random(3, 4);
+    let outerRadius = random(5, 8);
 
     beginShape();
     vertex(-outerRadius, -outerRadius);
